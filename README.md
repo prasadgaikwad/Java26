@@ -2,6 +2,29 @@
 
 This project demonstrates the key features introduced in **Java 26** (released March 2026) with practical, runnable examples.
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Where to Use Java 26 Features](#where-to-use-java-26-features)
+- [Java 26 Features](#java-26-features)
+  - [1. Primitive Types in Patterns](#1--primitive-types-in-patterns-jep-455530---preview)
+  - [2. Module Import Declarations](#2--module-import-declarations-jep-476---preview)
+  - [3. Flexible Constructor Bodies](#3--flexible-constructor-bodies-jep-482---preview)
+  - [4. Stream Gatherers](#4--stream-gatherers-jep-473---final)
+  - [5. Scoped Values](#5--scoped-values-jep-481---final)
+  - [6. Lazy Constants](#6--lazy-constants-jep-526---preview)
+  - [7. Structured Concurrency](#7--structured-concurrency-jep-525---preview)
+  - [8. HTTP/3 Client](#8--http3-client-jep-517---final)
+  - [9. PEM Encodings](#9--pem-encodings-jep-524---preview)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [Feature Status](#feature-status)
+- [Additional Resources](#additional-resources)
+- [Additional JEPs (No Code Examples)](#additional-jeps-no-code-examples)
+- [Notes](#notes)
+- [License](#license)
+
 ## Prerequisites
 
 - SDKMAN installed
@@ -19,6 +42,40 @@ sdk use java 26.ea.35-open
 # Verify installation
 java --version
 ```
+
+## Where to Use Java 26 Features
+
+These features are designed for real-world applications. Here's where each feature shines:
+
+### 🏢 Enterprise Applications
+- **Scoped Values** - Request context, user authentication, distributed tracing in web applications
+- **Structured Concurrency** - Parallel processing of database queries, API aggregation, microservices orchestration
+- **HTTP/3 Client** - Modern REST APIs, external service integration, cloud-native applications
+- **Stream Gatherers** - Data processing pipelines, ETL operations, analytics and reporting
+
+### 🔐 Security & Cryptography
+- **PEM Encodings** - SSL/TLS certificate management, key storage, secure configuration
+- **Scoped Values** - Security context propagation, audit logging
+
+### 🚀 Performance-Critical Applications
+- **Lazy Constants** - Large applications with extensive configuration, improved startup time
+- **HTTP/3 Client** - Mobile backends (handles network changes), real-time data streaming
+- **Structured Concurrency** - Virtual thread management, efficient resource utilization
+
+### 💻 General Development
+- **Primitive Types in Patterns** - Configuration parsers, data validation, numeric processing
+- **Flexible Constructor Bodies** - Input validation, complex object initialization, builder patterns
+- **Module Import Declarations** - Prototyping, scripting, educational code, exploratory programming
+- **Stream Gatherers** - Time-series analysis, moving averages, batch processing
+
+### 📱 Modern Cloud & Microservices
+- **Scoped Values** - Request tracking across services, correlation IDs, tenant context
+- **Structured Concurrency** - Fan-out/fan-in patterns, parallel data fetching
+- **HTTP/3 Client** - Container-to-container communication, API gateways, service mesh
+
+### 🔧 Developer Tools & Libraries
+- **Stream Gatherers** - Custom collection utilities, data transformation libraries
+- **Module Import Declarations** - REPL tools, interactive notebooks, teaching materials
 
 ## Java 26 Features
 
