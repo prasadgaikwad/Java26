@@ -16,7 +16,7 @@ java --version
 
 ### ✅ Final Features (Production Ready)
 
-1. **Primitive Types in Patterns (JEP 455)**
+1. **Primitive Types in Patterns (JEP 455/530)**
    - Pattern match on `int`, `long`, `double`, etc.
    - Use in `instanceof` and `switch`
    - File: `PrimitiveTypesInPatterns.java`
@@ -31,17 +31,37 @@ java --version
    - Better than ThreadLocal
    - File: `ScopedValues.java`
 
+4. **HTTP/3 Client (JEP 517)**
+   - HTTP/3 support with QUIC protocol
+   - Faster connections, better mobile support
+   - File: `Http3Client.java`
+
 ### 🔬 Preview Features (Experimental)
 
-4. **Module Import Declarations (JEP 476)**
+5. **Module Import Declarations (JEP 476)**
    - `import module java.base;`
    - Import entire modules
    - File: `ModuleImportDeclarations.java`
 
-5. **Flexible Constructor Bodies (JEP 482)**
+6. **Flexible Constructor Bodies (JEP 482)**
    - Statements before `super()` or `this()`
    - Better validation and preparation
    - File: `FlexibleConstructorBodies.java`
+
+7. **PEM Encodings (JEP 524)**
+   - Native PEM encoding/decoding
+   - No external crypto libraries needed
+   - File: `PemEncodings.java`
+
+8. **Structured Concurrency (JEP 525)**
+   - Treat concurrent tasks as single unit
+   - Better error handling and cancellation
+   - File: `StructuredConcurrency.java`
+
+9. **Lazy Constants (JEP 526)**
+   - Deferred initialization for constants
+   - Improved startup performance
+   - File: `LazyConstants.java`
 
 ## Compilation Commands
 
@@ -84,6 +104,18 @@ java --enable-preview -cp build features.FlexibleConstructorBodies
 
 # Module imports
 java --enable-preview -cp build features.ModuleImportDeclarations
+
+# Lazy constants
+java --enable-preview -cp build features.LazyConstants
+
+# Structured concurrency
+java --enable-preview -cp build features.StructuredConcurrency
+
+# HTTP/3 client
+java --enable-preview -cp build features.Http3Client
+
+# PEM encodings
+java --enable-preview -cp build features.PemEncodings
 ```
 
 ## Code Examples
@@ -137,6 +169,48 @@ class Circle extends Shape {
 ### Module Imports
 ```java
 import module java.base;  // Instead of many individual imports
+```
+
+### HTTP/3
+```java
+HttpClient client = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_3)
+    .build();
+
+HttpResponse<String> response = client.send(
+    request, HttpResponse.BodyHandlers.ofString()
+);
+```
+
+### Lazy Constants
+```java
+// Traditional - eager initialization
+static final String EAGER = "Eager: " + expensiveInit();
+
+// Lazy - deferred until first use
+lazy static final String LAZY = "Lazy: " + expensiveInit();
+```
+
+### Structured Concurrency
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future<String> user = scope.fork(() -> fetchUser());
+    Future<String> orders = scope.fork(() -> fetchOrders());
+    
+    scope.join();
+    scope.throwIfFailed();
+    
+    return user.resultNow() + orders.resultNow();
+}
+```
+
+### PEM Encodings
+```java
+// Encode key to PEM
+String pem = PemEncoder.encode(privateKey);
+
+// Decode PEM to key
+PrivateKey key = PemDecoder.decodePrivateKey(pem);
 ```
 
 ## What's New in Java 26?

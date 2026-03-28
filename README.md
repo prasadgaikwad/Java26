@@ -22,7 +22,7 @@ java --version
 
 ## Java 26 Features
 
-### 1. 🎯 Primitive Types in Patterns (JEP 455) - **FINAL**
+### 1. 🎯 Primitive Types in Patterns (JEP 455/530) - **PREVIEW**
 **File:** [`src/features/PrimitiveTypesInPatterns.java`](src/features/PrimitiveTypesInPatterns.java)
 
 Pattern matching now supports primitive types directly in `instanceof` and `switch` expressions.
@@ -194,6 +194,129 @@ java src/features/ScopedValues.java
 
 ---
 
+### 6. ⚡ Lazy Constants (JEP 526) - **PREVIEW**
+**File:** [`src/features/LazyConstants.java`](src/features/LazyConstants.java)
+
+Lazy constants are initialized only when first accessed, improving startup performance.
+
+**Key Benefits:**
+- ✅ Deferred initialization until first use
+- ✅ Improved application startup time
+- ✅ Thread-safe initialization
+- ✅ No manual lazy initialization boilerplate
+
+**Example:**
+```java
+// Traditional - initialized at class loading
+static final String EAGER = "Eager: " + Instant.now();
+
+// Lazy - initialized only when accessed
+lazy static final String LAZY = "Lazy: " + Instant.now();
+```
+
+**Run:**
+```bash
+java --enable-preview --source 26 src/features/LazyConstants.java
+```
+
+---
+
+### 7. 🔄 Structured Concurrency (JEP 525) - **PREVIEW**
+**File:** [`src/features/StructuredConcurrency.java`](src/features/StructuredConcurrency.java)
+
+Treat multiple tasks running in different threads as a single unit of work.
+
+**Key Benefits:**
+- ✅ All tasks complete or fail together
+- ✅ Automatic cancellation on failure
+- ✅ Clear thread ownership and lifecycle
+- ✅ Better error propagation
+- ✅ No thread leaks
+
+**Example:**
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future<String> user = scope.fork(() -> fetchUser());
+    Future<String> orders = scope.fork(() -> fetchOrders());
+    
+    scope.join();           // Wait for all
+    scope.throwIfFailed();  // Check for errors
+    
+    return user.resultNow() + ", " + orders.resultNow();
+}
+```
+
+**Run:**
+```bash
+java --enable-preview --source 26 src/features/StructuredConcurrency.java
+```
+
+---
+
+### 8. 🌐 HTTP/3 Client (JEP 517) - **FINAL**
+**File:** [`src/features/Http3Client.java`](src/features/Http3Client.java)
+
+HTTP/3 support for java.net.http.HttpClient using QUIC protocol.
+
+**Key Benefits:**
+- ✅ Faster connection establishment (0-RTT)
+- ✅ Better performance on lossy networks
+- ✅ Connection migration (survives IP changes)
+- ✅ No head-of-line blocking
+- ✅ Built on UDP instead of TCP
+
+**Example:**
+```java
+HttpClient client = HttpClient.newBuilder()
+    .version(HttpClient.Version.HTTP_3)
+    .build();
+
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://example.com"))
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(
+    request, 
+    HttpResponse.BodyHandlers.ofString()
+);
+```
+
+**Run:**
+```bash
+java src/features/Http3Client.java
+```
+
+---
+
+### 9. 🔐 PEM Encodings (JEP 524) - **PREVIEW**
+**File:** [`src/features/PemEncodings.java`](src/features/PemEncodings.java)
+
+Standard API for reading and writing PEM-encoded cryptographic objects.
+
+**Key Benefits:**
+- ✅ Native PEM support in JDK
+- ✅ Read/write keys and certificates
+- ✅ No need for external libraries
+- ✅ Standardized format handling
+- ✅ Supports encrypted PEM files
+
+**Example:**
+```java
+// Encode key to PEM format
+String pem = PemEncoder.encode(keyPair.getPrivate());
+
+// Decode PEM back to key
+PrivateKey key = PemDecoder.decodePrivateKey(pem);
+```
+
+**Run:**
+```bash
+java --enable-preview --source 26 src/features/PemEncodings.java
+```
+
+---
+
 ## Quick Start
 
 ### Run All Examples (Easiest Method)
@@ -223,6 +346,10 @@ $JAVA --enable-preview -cp build features.StreamGatherers
 $JAVA --enable-preview -cp build features.ScopedValues
 $JAVA --enable-preview -cp build features.FlexibleConstructorBodies
 $JAVA --enable-preview -cp build features.ModuleImportDeclarations
+$JAVA --enable-preview -cp build features.LazyConstants
+$JAVA --enable-preview -cp build features.StructuredConcurrency
+$JAVA --enable-preview -cp build features.Http3Client
+$JAVA --enable-preview -cp build features.PemEncodings
 ```
 
 ## Project Structure
@@ -230,24 +357,36 @@ $JAVA --enable-preview -cp build features.ModuleImportDeclarations
 ```
 Java26/
 ├── README.md                                    # This file
+├── QUICKREF.md                                  # Quick reference guide
+├── run-all.sh                                   # Run all examples
 └── src/
     └── features/
-        ├── PrimitiveTypesInPatterns.java       # JEP 455 (Final)
+        ├── PrimitiveTypesInPatterns.java       # JEP 455/530 (Preview)
         ├── ModuleImportDeclarations.java       # JEP 476 (Preview)
-        ├── FlexibleConstructorBodies.java      # JEP 482 (Preview)
         ├── StreamGatherers.java                # JEP 473 (Final)
-        └── ScopedValues.java                   # JEP 481 (Final)
+        ├── ScopedValues.java                   # JEP 481 (Final)
+        ├── FlexibleConstructorBodies.java      # JEP 482 (Preview)
+        ├── LazyConstants.java                  # JEP 526 (Preview)
+        ├── StructuredConcurrency.java          # JEP 525 (Preview)
+        ├── Http3Client.java                    # JEP 517 (Final)
+        └── PemEncodings.java                   # JEP 524 (Preview)
 ```
 
 ## Feature Status
 
 | Feature | JEP | Status | Preview Flag Required |
 |---------|-----|--------|----------------------|
-| Primitive Types in Patterns | 455 | ✅ Final | No |
+| Primitive Types in Patterns | 455/530 | 🔬 Preview | Yes |
 | Module Import Declarations | 476 | 🔬 Preview | Yes |
-| Flexible Constructor Bodies | 482 | 🔬 Preview | Yes |
 | Stream Gatherers | 473 | ✅ Final | No |
 | Scoped Values | 481 | ✅ Final | No |
+| Flexible Constructor Bodies | 482 | 🔬 Preview | Yes |
+| HTTP/3 Client | 517 | ✅ Final | No |
+| PEM Encodings | 524 | 🔬 Preview | Yes |
+| Structured Concurrency | 525 | 🔬 Preview | Yes |
+| Lazy Constants | 526 | 🔬 Preview | Yes |
+
+**Note:** JEPs 500, 504, 516, 522, and 529 are infrastructure/internal improvements without user-facing code examples.
 
 ## Additional Resources
 
@@ -255,11 +394,22 @@ Java26/
 - [JEP Index](https://openjdk.org/jeps/0)
 - [Java Documentation](https://docs.oracle.com/en/java/javase/26/)
 
+## Additional JEPs (No Code Examples)
+
+The following JEPs are included in Java 26 but are internal/infrastructure improvements:
+
+- **JEP 500**: Prepare to Make Final Mean Final (Language change preparation)
+- **JEP 504**: Remove the Applet API (Removal of deprecated API)
+- **JEP 516**: Ahead-of-Time Object Caching with Any GC (JVM optimization)
+- **JEP 522**: G1 GC: Improve Throughput by Reducing Synchronization (GC improvement)
+- **JEP 529**: Vector API (Eleventh Incubator) (Incubating API)
+
 ## Notes
 
-- **Preview Features**: Some features are in preview and require `--enable-preview --source 26` flags
-- **Virtual Threads**: Java 26 continues to improve virtual threads (Project Loom)
-- **Performance**: Many features focus on performance and developer ergonomics
+- **Preview Features**: Many features are in preview and require `--enable-preview --source 26` flags
+- **Virtual Threads**: Java 26 continues to improve virtual threads (used in Structured Concurrency)
+- **Performance**: Focus on startup performance (Lazy Constants), network performance (HTTP/3), and GC improvements
+- **Security**: Enhanced cryptographic support with native PEM encoding
 
 ## License
 

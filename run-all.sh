@@ -38,11 +38,15 @@ fi
 
 # Run each example
 examples=(
-    "PrimitiveTypesInPatterns:Primitive Types in Patterns (JEP 455)"
+    "PrimitiveTypesInPatterns:Primitive Types in Patterns (JEP 455/530)"
     "StreamGatherers:Stream Gatherers (JEP 473)"
     "ScopedValues:Scoped Values (JEP 481)"
     "FlexibleConstructorBodies:Flexible Constructor Bodies (JEP 482)"
     "ModuleImportDeclarations:Module Import Declarations (JEP 476)"
+    "LazyConstants:Lazy Constants (JEP 526)"
+    "StructuredConcurrency:Structured Concurrency (JEP 525)"
+    "Http3Client:HTTP/3 Client (JEP 517)"
+    "PemEncodings:PEM Encodings (JEP 524)"
 )
 
 for example in "${examples[@]}"; do
